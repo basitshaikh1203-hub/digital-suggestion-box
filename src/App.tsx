@@ -411,10 +411,44 @@ function AdminLoginPage() {
 }
 function AdminDashboardPage({
   records,
+  onUpdateRecord,
 }: {
   records: SuggestionRecord[];
+  onUpdateRecord: (
+    id: string,
+    status: SuggestionStatus,
+    response: string,
+  ) => void;
 }) {
   const [, setLocation] = useLocation();
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [editedStatuses, setEditedStatuses] = useState<
+    Record<string, SuggestionStatus>
+  >({});
+  const [responses, setResponses] = useState<Record<string, string>>({});
+
+  function getStatus(record: SuggestionRecord) {
+    return editedStatuses[record.id] ?? record.status;
+  }
+
+  function getResponse(record: SuggestionRecord) {
+    return responses[record.id] ?? record.response ?? '';
+  }
+
+  function updateStatus(id: string, status: SuggestionStatus) {
+    setEditedStatuses((current) => ({
+      ...current,
+      [id]: status,
+    }));
+  }
+
+  function updateResponse(id: string, response: string) {
+    setResponses((current) => ({
+      ...current,
+      [id]: response,
+    }));
+  }
 
   return (
     <Shell>
@@ -489,37 +523,163 @@ function AdminDashboardPage({
               </div>
             ) : (
               <div className="divide-y divide-[hsl(var(--border))]">
-                {records.map((record) => (
-                  <div
-                    key={record.id}
-                    className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono-ui text-xs font-bold text-[hsl(var(--primary))]">
-                          {record.referenceCode}
-                        </span>
-                        <StatusBadge status={record.status} />
-                      </div>
+                {records.map((record) => {
+  const isOpen = selectedId === record.id;
+  const status = getStatus(record);
+  const response = getResponse(record);
 
-                      <p className="mt-3 text-sm font-semibold">
-                        {record.type} · {record.category}
-                      </p>
+  return (
+    <div key={record.id} className="p-5">
+      <button
+        type="button"
+        onClick={() => setSelectedId(isOpen ? null : record.id)}
+        className="w-full text-left"
+      >
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-mono-ui text-xs font-bold text-[hsl(var(--primary))]">
+                {record.referenceCode}
+              </span>
 
-                      <p className="mt-2 text-sm leading-6 text-[hsl(var(--muted-foreground))]">
-                        {record.description}
-                      </p>
+              <StatusBadge status={status} />
 
-                      <p className="mt-2 text-xs text-[hsl(var(--muted-foreground))]">
-                        Location: {record.location}
+              {record.images && record.images.length > 0 && (
+                <span className="rounded-full bg-[hsl(var(--muted))] px-2.5 py-1 text-[11px] font-bold">
+                  {record.images.length} image
+                  {record.images.length > 1 ? 's' : ''}
+                </span>
+              )}
+            </div>
+
+            <p className="mt-3 text-sm font-semibold">
+              {record.type} · {record.category}
+            </p>
+
+            <p className="mt-2 text-sm leading-6 text-[hsl(var(--muted-foreground))]">
+              {record.description}
+            </p>
+
+            <p className="mt-2 text-xs text-[hsl(var(--muted-foreground))]">
+              Location: {record.location}
+            </p>
+          </div>
+
+          <div className="shrink-0 text-xs text-[hsl(var(--muted-foreground))]">
+            {new Date(record.createdAt).toLocaleDateString()}
+          </div>
+        </div>
+      </button>
+
+      {isOpen && (
+        <div className="mt-6 border-t border-[hsl(var(--border))] pt-6">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div>
+              <p className="font-mono-ui text-[10px] font-bold uppercase tracking-[.13em] text-[hsl(var(--muted-foreground))]">
+                Uploaded images
+              </p>
+
+              {record.images && record.images.length > 0 ? (
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {record.images.map((image) => (
+                    <div
+                      key={image.id}
+                      className="overflow-hidden rounded-xl border border-[hsl(var(--border))]"
+                    >
+                      <img
+                        src={image.url}
+                        alt={image.name}
+                        className="h-52 w-full object-cover"
+                      />
+
+                      <p className="truncate px-3 py-2 text-xs text-[hsl(var(--muted-foreground))]">
+                        {image.name}
                       </p>
                     </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-3 rounded-xl bg-[hsl(var(--muted)/.7)] p-5 text-sm text-[hsl(var(--muted-foreground))]">
+                  No image was attached to this submission.
+                </div>
+              )}
+            </div>
 
-                    <div className="shrink-0 text-xs text-[hsl(var(--muted-foreground))]">
-                      {new Date(record.createdAt).toLocaleDateString()}
-                    </div>
-                  </div>
-                ))}
+            <div className="space-y-6">
+              <div>
+                <label
+                  htmlFor={`status-${record.id}`}
+                  className="font-mono-ui text-[10px] font-bold uppercase tracking-[.13em] text-[hsl(var(--muted-foreground))]"
+                >
+                  Update status
+                </label>
+
+                <select
+                  id={`status-${record.id}`}
+                  value={status}
+                  onChange={(event) =>
+                    updateStatus(
+                      record.id,
+                      event.target.value as SuggestionStatus,
+                    )
+                  }
+                  className="form-control mt-3"
+                >
+                  <option value="Received">Received</option>
+                  <option value="Under review">Under review</option>
+                  <option value="In progress">In progress</option>
+                  <option value="Resolved">Resolved</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor={`response-${record.id}`}
+                  className="font-mono-ui text-[10px] font-bold uppercase tracking-[.13em] text-[hsl(var(--muted-foreground))]"
+                >
+                  College response
+                </label>
+
+                <textarea
+                  id={`response-${record.id}`}
+                  value={response}
+                  onChange={(event) =>
+                    updateResponse(record.id, event.target.value)
+                  }
+                  rows={6}
+                  placeholder="Write a response that the student can see when they track this feedback."
+                  className="form-control mt-3 resize-y"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    onUpdateRecord(record.id, status, response);
+
+                    setEditedStatuses((current) => {
+                      const next = { ...current };
+                      delete next[record.id];
+                      return next;
+                    });
+
+                    setResponses((current) => {
+                      const next = { ...current };
+                      delete next[record.id];
+                      return next;
+                    });
+                  }}
+                  className="mt-3 rounded-full bg-[hsl(var(--primary))] px-5 py-2.5 text-sm font-bold text-[hsl(var(--primary-foreground))]"
+                >
+                  Save changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+})}
               </div>
             )}
           </div>
@@ -532,11 +692,34 @@ function NotFound() {
   return <Shell><main className="mx-auto flex min-h-[60dvh] max-w-xl flex-col items-center justify-center px-5 text-center"><span className="font-mono-ui text-xs text-[hsl(var(--accent))]">404 / not here</span><h1 className="mt-4 font-display text-5xl">This page took a wrong turn.</h1><p className="mt-4 text-[hsl(var(--muted-foreground))]">The page you are looking for does not exist.</p><ButtonLink href="/" testId="link-not-found-home">Back home</ButtonLink></main></Shell>;
 }
 
-function RouterContent({ records, votedIds, onVote, onSubmit, lastSubmitted }: { records: SuggestionRecord[]; votedIds: string[]; onVote: (id: string) => void; onSubmit: (record: SuggestionRecord) => void; lastSubmitted?: SuggestionRecord }) {
+function RouterContent({
+  records,
+  votedIds,
+  onVote,
+  onSubmit,
+  onUpdateRecord,
+  lastSubmitted,
+}: {
+  records: SuggestionRecord[];
+  votedIds: string[];
+  onVote: (id: string) => void;
+  onSubmit: (record: SuggestionRecord) => void;
+  onUpdateRecord: (
+    id: string,
+    status: SuggestionStatus,
+    response: string,
+  ) => void;
+  lastSubmitted?: SuggestionRecord;
+}) {
   const [location] = useLocation();
   return <ErrorBoundary resetKey={location}><Switch><Route path="/" component={() => <Home records={records} votedIds={votedIds} onVote={onVote} />} /><Route path="/submit" component={() => <SubmitPage records={records} onSubmit={onSubmit} />} /><Route path="/submitted" component={() => <SubmittedPage record={lastSubmitted} />} /><Route path="/track" component={() => <TrackPage records={records} prefillCode={lastSubmitted?.referenceCode} />} /><Route path="/suggestions" component={() => <SuggestionsPage records={records} votedIds={votedIds} onVote={onVote} />} /><Route path="/admin/login" component={AdminLoginPage} /><Route
   path="/admin/dashboard"
-  component={() => <AdminDashboardPage records={records} />}
+  component={() => (
+    <AdminDashboardPage
+      records={records}
+      onUpdateRecord={onUpdateRecord}
+    />
+  )}
 /><Route component={NotFound} /></Switch></ErrorBoundary>;
 }
 
@@ -546,7 +729,31 @@ function App() {
   const [lastSubmitted, setLastSubmitted] = useState<SuggestionRecord>();
   function onVote(id: string) { setVotedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]); }
   function onSubmit(record: SuggestionRecord) { setRecords((current) => [record, ...current]); setLastSubmitted(record); }
-  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><RouterContent records={records} votedIds={votedIds} onVote={onVote} onSubmit={onSubmit} lastSubmitted={lastSubmitted} /></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
+  function onUpdateRecord(
+  id: string,
+  status: SuggestionStatus,
+  response: string,
+) {
+  setRecords((current) =>
+    current.map((record) =>
+      record.id === id
+        ? {
+            ...record,
+            status,
+            response: response.trim() || undefined,
+          }
+        : record,
+    ),
+  );
+}
+  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><RouterContent
+  records={records}
+  votedIds={votedIds}
+  onVote={onVote}
+  onSubmit={onSubmit}
+  onUpdateRecord={onUpdateRecord}
+  lastSubmitted={lastSubmitted}
+/></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
 }
 
 export default App;
