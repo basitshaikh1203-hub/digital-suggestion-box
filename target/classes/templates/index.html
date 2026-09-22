@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusVoice - Digital Suggestion Box</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        header {
+            background: #17365d;
+            color: white;
+            padding: 22px 8%;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #dbe7f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 45px auto;
+            padding: 0 25px;
+        }
+
+        .page-heading {
+            margin-bottom: 30px;
+        }
+
+        .page-heading h1 {
+            font-size: 30px;
+            color: #17365d;
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            color: #667085;
+            font-size: 15px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e1e5ea;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .card h2 {
+            color: #17365d;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .number {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 50%;
+            background: #17365d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step h3 {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .step p {
+            font-size: 13px;
+            color: #667085;
+            line-height: 1.5;
+        }
+
+        .privacy {
+            margin-top: 25px;
+            padding: 16px;
+            background: #f1f5f9;
+            border-left: 4px solid #17365d;
+            font-size: 13px;
+            color: #475467;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cfd5dc;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        select:focus,
+        textarea:focus {
+            border-color: #17365d;
+        }
+
+        textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .notice {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 14px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #475467;
+            line-height: 1.5;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 5px;
+            background: #17365d;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #102b4c;
+        }
+
+        .success {
+            background: #ecfdf3;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+            padding: 14px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            color: #667085;
+            font-size: 13px;
+            background: white;
+        }
+
+        @media (max-width: 800px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="logo">CampusVoice</div>
+        <div class="subtitle">
+            Digital Suggestion Box &nbsp; | &nbsp; Student Feedback Portal
+        </div>
+    </div>
+</header>
+
+<main class="container">
+
+    <div class="page-heading">
+        <h1>Submit Your Feedback</h1>
+        <p>
+            Help improve the campus by sharing your suggestions, concerns, and ideas.
+        </p>
+    </div>
+
+    <div class="content">
+
+        <!-- Left information section -->
+        <div class="card">
+
+            <h2>How It Works</h2>
+
+            <div class="step">
+                <div class="number">1</div>
+                <div>
+                    <h3>Choose a Category</h3>
+                    <p>
+                        Select the area of campus your suggestion relates to.
+                    </p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="number">2</div>
+                <div>
+                    <h3>Write Your Feedback</h3>
+                    <p>
+                        Clearly describe your suggestion, concern, or idea.
+                    </p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="number">3</div>
+                <div>
+                    <h3>Submit Anonymously</h3>
+                    <p>
+                        Your feedback is submitted without collecting your identity.
+                    </p>
+                </div>
+            </div>
+
+            <div class="privacy">
+                <strong>Privacy Notice</strong><br><br>
+                CampusVoice does not require your name, student ID, email address,
+                or account to submit feedback.
+            </div>
+
+        </div>
+
+        <!-- Form section -->
+        <div class="card">
+
+            <h2>Suggestion Form</h2>
+
+            <!-- Success message -->
+            <div th:if="${param.success}" class="success">
+                Your feedback has been submitted successfully.
+                Thank you for helping improve the campus.
+            </div>
+
+            <form action="/submit" method="post">
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+
+                    <select id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="Academics">Academics</option>
+                        <option value="Infrastructure">Infrastructure</option>
+                        <option value="Canteen">Canteen</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Events">Events</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="suggestion">Suggestion / Concern</label>
+
+                    <textarea
+                        id="suggestion"
+                        name="suggestion"
+                        placeholder="Write your suggestion or concern here..."
+                        required></textarea>
+                </div>
+
+                <div class="notice">
+                    Your submission is anonymous. No student name, student ID,
+                    email address, or account information is requested.
+                </div>
+
+                <button type="submit">
+                    Submit Feedback
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    <strong>Campus Feedback System</strong><br>
+    Anonymous Student Feedback Portal
+</footer>
+
+</body>
+</html>

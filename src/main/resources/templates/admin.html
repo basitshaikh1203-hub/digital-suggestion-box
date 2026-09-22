@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - CampusVoice</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #252b33;
+        }
+
+        /* HEADER */
+
+        .header {
+            background: #17365d;
+            color: white;
+            padding: 20px 45px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand h1 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .brand p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .logout {
+            color: white;
+            text-decoration: none;
+
+            border: 1px solid rgba(255,255,255,0.5);
+
+            padding: 9px 16px;
+
+            border-radius: 5px;
+
+            font-size: 14px;
+        }
+
+        .logout:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* MAIN */
+
+        .container {
+            width: 92%;
+            max-width: 1300px;
+
+            margin: 35px auto;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h2 {
+            font-size: 27px;
+            color: #17365d;
+            margin-bottom: 7px;
+        }
+
+        .page-heading p {
+            color: #68717d;
+            font-size: 14px;
+        }
+
+        /* STAT CARDS */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+
+            border: 1px solid #dfe3e8;
+
+            border-radius: 8px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .stat-title {
+            color: #68717d;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            color: #17365d;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* TABLE CARD */
+
+        .table-card {
+            background: white;
+
+            border: 1px solid #dfe3e8;
+
+            border-radius: 8px;
+
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px;
+
+            border-bottom: 1px solid #dfe3e8;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .table-header h3 {
+            color: #17365d;
+            font-size: 18px;
+        }
+
+        /* FILTERS */
+
+        .filters {
+            display: flex;
+
+            gap: 10px;
+
+            align-items: center;
+        }
+
+        .filters input,
+        .filters select {
+
+            padding: 9px 11px;
+
+            border: 1px solid #cfd5dc;
+
+            border-radius: 5px;
+
+            font-size: 13px;
+
+            outline: none;
+        }
+
+        .filters input {
+            width: 220px;
+        }
+
+        /* TABLE */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #eef1f5;
+
+            color: #3b424a;
+
+            text-align: left;
+
+            padding: 14px 16px;
+
+            font-size: 13px;
+
+            border-bottom:
+                1px solid #dfe3e8;
+        }
+
+        td {
+            padding: 15px 16px;
+
+            border-bottom:
+                1px solid #edf0f2;
+
+            font-size: 14px;
+
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .suggestion-text {
+            max-width: 420px;
+
+            line-height: 1.5;
+        }
+
+        /* STATUS */
+
+        .status-form {
+            display: flex;
+
+            gap: 6px;
+
+            align-items: center;
+        }
+
+        .status-form select {
+            padding: 7px;
+
+            border:
+                1px solid #cfd5dc;
+
+            border-radius: 5px;
+
+            font-size: 12px;
+        }
+
+        .update-btn {
+
+            background: #17365d;
+
+            color: white;
+
+            border: none;
+
+            padding: 7px 10px;
+
+            border-radius: 5px;
+
+            font-size: 12px;
+
+            cursor: pointer;
+        }
+
+        .update-btn:hover {
+            background: #102a49;
+        }
+
+        /* DELETE */
+
+        .delete-btn {
+
+            background: #a33a3a;
+
+            color: white;
+
+            border: none;
+
+            padding: 7px 11px;
+
+            border-radius: 5px;
+
+            font-size: 12px;
+
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #852d2d;
+        }
+
+        /* EMPTY */
+
+        .empty {
+            text-align: center;
+
+            padding: 55px 20px;
+
+            color: #7a828c;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+
+            padding: 25px;
+
+            color: #7a828c;
+
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .table-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .header {
+                padding: 18px 20px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                width: 100%;
+
+                flex-direction: column;
+            }
+
+            .filters input,
+            .filters select {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="brand">
+
+        <h1>CampusVoice</h1>
+
+        <p>
+            Digital Suggestion Box · Administration
+        </p>
+
+    </div>
+
+    <a href="/admin/logout"
+       class="logout">
+        Logout
+    </a>
+
+</header>
+
+
+<main class="container">
+
+    <div class="page-heading">
+
+        <h2>
+            Admin Dashboard
+        </h2>
+
+        <p>
+            Review and manage anonymous student feedback.
+        </p>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Suggestions
+            </div>
+
+            <div class="stat-number"
+                 th:text="${total}">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Pending
+            </div>
+
+            <div class="stat-number"
+                 th:text="${pending}">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Under Review
+            </div>
+
+            <div class="stat-number"
+                 th:text="${underReview}">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Resolved
+            </div>
+
+            <div class="stat-number"
+                 th:text="${resolved}">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUGGESTIONS -->
+
+    <div class="table-card">
+
+        <div class="table-header">
+
+            <h3>
+                Submitted Suggestions
+            </h3>
+
+            <div class="filters">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search suggestions..."
+                    onkeyup="filterTable()">
+
+
+                <select
+                    id="categoryFilter"
+                    onchange="filterTable()">
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    <option value="Academics">
+                        Academics
+                    </option>
+
+                    <option value="Infrastructure">
+                        Infrastructure
+                    </option>
+
+                    <option value="Canteen">
+                        Canteen
+                    </option>
+
+                    <option value="Transport">
+                        Transport
+                    </option>
+
+                    <option value="Events">
+                        Events
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table id="suggestionTable"
+                   th:if="${!#lists.isEmpty(suggestions)}">
+
+                <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Category
+                    </th>
+
+                    <th>
+                        Suggestion
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Submitted At
+                    </th>
+
+                    <th>
+                        Actions
+                    </th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <tr th:each="suggestion : ${suggestions}">
+
+                    <td th:text="${suggestion.id}">
+                        1
+                    </td>
+
+
+                    <td class="category"
+                        th:text="${suggestion.category}">
+                        Academics
+                    </td>
+
+
+                    <td class="suggestion-text"
+                        th:text="${suggestion.suggestion}">
+                        Sample suggestion
+                    </td>
+
+
+                    <td>
+
+                        <form
+                            action="/admin/update-status"
+                            method="post"
+                            class="status-form">
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                th:value="${suggestion.id}">
+
+                            <select name="status">
+
+                                <option
+                                    value="Pending"
+                                    th:selected="${suggestion.status == 'Pending'}">
+                                    Pending
+                                </option>
+
+                                <option
+                                    value="Under Review"
+                                    th:selected="${suggestion.status == 'Under Review'}">
+                                    Under Review
+                                </option>
+
+                                <option
+                                    value="Resolved"
+                                    th:selected="${suggestion.status == 'Resolved'}">
+                                    Resolved
+                                </option>
+
+                            </select>
+
+                            <button
+                                type="submit"
+                                class="update-btn">
+
+                                Update
+
+                            </button>
+
+                        </form>
+
+                    </td>
+
+
+                    <td th:text="${suggestion.createdAt}">
+                        2026-09-22
+                    </td>
+
+
+                    <td>
+
+                        <form
+                            action="/admin/delete"
+                            method="post"
+                            onsubmit="return confirm('Are you sure you want to delete this suggestion?');">
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                th:value="${suggestion.id}">
+
+                            <button
+                                type="submit"
+                                class="delete-btn">
+
+                                Delete
+
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+
+            <div class="empty"
+                 th:if="${#lists.isEmpty(suggestions)}">
+
+                No suggestions have been submitted yet.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<div class="footer">
+
+    Campus Feedback System
+
+</div>
+
+
+<script>
+
+    function filterTable() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+        const category =
+            document
+                .getElementById("categoryFilter")
+                .value
+                .toLowerCase();
+
+        const rows =
+            document
+                .querySelectorAll("#suggestionTable tbody tr");
+
+
+        rows.forEach(function(row) {
+
+            const categoryText =
+                row
+                    .querySelector(".category")
+                    .textContent
+                    .toLowerCase();
+
+            const suggestionText =
+                row
+                    .querySelector(".suggestion-text")
+                    .textContent
+                    .toLowerCase();
+
+
+            const matchesSearch =
+                suggestionText.includes(search);
+
+            const matchesCategory =
+                category === ""
+                ||
+                categoryText === category;
+
+
+            if (
+                matchesSearch
+                &&
+                matchesCategory
+            ) {
+
+                row.style.display = "";
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+</script>
+
+</body>
+
+</html>
