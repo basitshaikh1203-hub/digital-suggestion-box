@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Submission Successful - CampusVoice</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f7f7f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 520px;
+            background: white;
+            border: 2px solid #5A0F1B;
+            padding: 45px;
+            text-align: center;
+        }
+
+        .icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            border: 2px solid #5A0F1B;
+            border-radius: 50%;
+            color: #5A0F1B;
+            font-size: 32px;
+            line-height: 56px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #5A0F1B;
+            margin-bottom: 12px;
+            font-size: 28px;
+        }
+
+        .message {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .tracking-box {
+            border: 2px solid #5A0F1B;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .tracking-label {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .tracking-id {
+            color: #5A0F1B;
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .warning {
+            color: #555;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #5A0F1B;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #430B14;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="icon">✓</div>
+
+    <h1>Feedback Submitted</h1>
+
+    <p class="message">
+        Your suggestion has been submitted successfully.
+        Your feedback has been recorded anonymously.
+    </p>
+
+    <div class="tracking-box">
+
+        <div class="tracking-label">
+            YOUR TRACKING ID
+        </div>
+
+        <div class="tracking-id" th:text="${param.trackingId}">
+            CV-ABC123
+        </div>
+
+    </div>
+
+    <p class="warning">
+        Save this Tracking ID. You can use it later to check
+        the status of your suggestion.
+    </p>
+
+    <a href="/" class="button">
+    Return to Home
+</a>
+    </a>
+
+</div>
+
+</body>
+
+</html>

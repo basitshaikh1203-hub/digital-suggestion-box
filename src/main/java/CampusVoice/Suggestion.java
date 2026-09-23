@@ -1,7 +1,14 @@
 package CampusVoice;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "suggestions")
@@ -10,6 +17,9 @@ public class Suggestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
+    private String trackingId;
 
     private String category;
 
@@ -28,10 +38,24 @@ public class Suggestion {
         this.suggestion = suggestion;
         this.status = "Pending";
         this.createdAt = LocalDateTime.now();
+        this.trackingId = generateTrackingId();
+    }
+
+    private String generateTrackingId() {
+        String randomPart = UUID.randomUUID()
+                .toString()
+                .substring(0, 6)
+                .toUpperCase();
+
+        return "CV-" + randomPart;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getTrackingId() {
+        return trackingId;
     }
 
     public String getCategory() {
