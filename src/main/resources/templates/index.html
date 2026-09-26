@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>CampusVoice - Digital Suggestion Box</title>
+    <title>CampusVoice - Anonymous Digital Suggestion Box</title>
 
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,9 +16,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background: #f7f7f7;
-            color: #222;
+            background: #FFFFFF;
+            color: #0C2340;
+            transition: background 0.25s ease, color 0.25s ease;
         }
 
         .layout {
@@ -25,275 +31,562 @@
             min-height: 100vh;
         }
 
-        /* SIDEBAR */
-
         .sidebar {
-            width: 245px;
-            background: #5A0F1B;
+            width: 250px;
+            background: #0C2340;
             color: white;
             position: fixed;
             left: 0;
             top: 0;
             bottom: 0;
-            padding: 25px 18px;
+            padding: 28px 18px;
+            box-shadow: 3px 0 15px rgba(12, 35, 64, 0.15);
+            z-index: 1000;
         }
 
         .brand {
-            padding: 0 10px 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0 12px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.22);
             margin-bottom: 25px;
         }
 
         .brand h1 {
-            font-size: 24px;
-            margin-bottom: 6px;
+            font-size: 25px;
+            letter-spacing: 0.3px;
+            margin-bottom: 7px;
+        }
+
+        .brand h1 span {
+            color: #B9975B;
         }
 
         .brand p {
             font-size: 12px;
-            opacity: 0.8;
+            color: #d7dee7;
+            line-height: 1.5;
+        }
+
+        .nav-title {
+            color: #B9975B;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1.4px;
+            padding: 0 12px 10px;
+            text-transform: uppercase;
         }
 
         .nav a {
             display: block;
-            color: white;
+            color: #f5f7fa;
             text-decoration: none;
             padding: 13px 12px;
             margin-bottom: 5px;
             font-size: 14px;
             border-left: 3px solid transparent;
+            transition: 0.2s;
         }
 
         .nav a:hover {
-            background: #430B14;
-            border-left-color: white;
+            background: #173452;
+            border-left-color: #B9975B;
+            padding-left: 16px;
         }
 
         .admin-link {
-            margin-top: 30px;
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 25px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.22);
         }
 
-        /* MAIN CONTENT */
+        .admin-link a {
+            color: #d7dee7;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 10px 12px;
+            display: block;
+        }
+
+        .admin-link a:hover {
+            color: #FFFFFF;
+            background: #173452;
+        }
 
         .main {
-            margin-left: 245px;
-            width: calc(100% - 245px);
+            margin-left: 250px;
+            width: calc(100% - 250px);
             min-height: 100vh;
+            background: #FFFFFF;
         }
 
         .topbar {
-            height: 70px;
-            background: white;
-            border-bottom: 2px solid #5A0F1B;
+            min-height: 72px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #d9dee5;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 35px;
+            padding: 14px 40px;
+            gap: 20px;
         }
 
         .topbar-title {
-            color: #5A0F1B;
+            color: #0C2340;
             font-size: 18px;
             font-weight: bold;
         }
 
         .topbar-subtitle {
-            color: #777;
+            color: #687586;
             font-size: 12px;
             margin-top: 4px;
         }
 
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-button {
+            background: #FFFFFF;
+            color: #0C2340;
+            border: 1px solid #aeb7c2;
+            padding: 9px 13px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
         .admin-button {
-            background: #5A0F1B;
-            color: white;
+            background: #B9975B;
+            color: #0C2340;
             text-decoration: none;
             padding: 10px 18px;
             font-size: 13px;
             font-weight: bold;
         }
 
-        .admin-button:hover {
-            background: #430B14;
-        }
-
         .content {
-            padding: 35px;
+            padding: 38px 42px;
+            max-width: 1450px;
+            margin: 0 auto;
         }
 
-        .page-title {
-            color: #5A0F1B;
-            font-size: 28px;
-            margin-bottom: 8px;
+        .hero {
+            background: #0C2340;
+            color: white;
+            padding: 45px;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #B9975B;
         }
 
-        .page-description {
-            color: #666;
+        .hero-label {
+            display: inline-block;
+            border: 1px solid #B9975B;
+            color: #B9975B;
+            padding: 6px 11px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1.2px;
+            margin-bottom: 17px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            line-height: 1.2;
+            margin-bottom: 13px;
+            max-width: 720px;
+        }
+
+        .hero h1 span {
+            color: #B9975B;
+        }
+
+        .hero p {
+            color: #dce3eb;
+            font-size: 15px;
+            line-height: 1.7;
+            max-width: 720px;
+            margin-bottom: 25px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hero-button {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .hero-button.primary {
+            background: #B9975B;
+            color: #0C2340;
+        }
+
+        .hero-button.secondary {
+            border: 1px solid #dce3eb;
+            color: white;
+        }
+
+        .anonymous-notice {
+            background: #FFFFFF;
+            border: 1px solid #d5dbe2;
+            border-left: 5px solid #B9975B;
+            padding: 20px 22px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .anonymous-icon {
+            min-width: 48px;
+            height: 48px;
+            border: 2px solid #B9975B;
+            color: #0C2340;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
             font-size: 14px;
-            margin-bottom: 30px;
         }
 
-        /* CARDS */
+        .anonymous-notice h3 {
+            color: #0C2340;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .anonymous-notice p {
+            color: #687586;
+            font-size: 13px;
+            line-height: 1.5;
+        }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
             margin-bottom: 30px;
         }
 
         .info-card {
-            background: white;
-            border: 1px solid #5A0F1B;
-            padding: 25px;
+            background: #FFFFFF;
+            border: 1px solid #d5dbe2;
+            padding: 24px;
+        }
+
+        .card-number {
+            color: #B9975B;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 13px;
         }
 
         .info-card h3 {
-            color: #5A0F1B;
+            color: #0C2340;
             font-size: 17px;
-            margin-bottom: 10px;
+            margin-bottom: 9px;
         }
 
         .info-card p {
-            color: #666;
-            font-size: 14px;
+            color: #687586;
+            font-size: 13px;
             line-height: 1.6;
         }
 
-        /* FORM */
-
         .section {
-            background: white;
-            border: 1px solid #5A0F1B;
-            padding: 30px;
+            background: #FFFFFF;
+            border: 1px solid #d5dbe2;
+            padding: 32px;
             margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(12, 35, 64, 0.03);
         }
 
-        .section-title {
-            color: #5A0F1B;
-            font-size: 20px;
+        .section-heading {
+            border-bottom: 1px solid #e0e4e9;
+            padding-bottom: 18px;
             margin-bottom: 25px;
         }
 
+        .section-title {
+            color: #0C2340;
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .section-description {
+            color: #687586;
+            font-size: 13px;
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 21px;
         }
 
         label {
-            display: block;
-            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #0C2340;
             font-size: 14px;
             font-weight: bold;
             margin-bottom: 8px;
+        }
+
+        .required {
+            color: #B9975B;
+        }
+
+        .character-count {
+            color: #7b8794;
+            font-size: 11px;
+            font-weight: normal;
         }
 
         select,
         textarea {
             width: 100%;
-            border: 1px solid #999;
+            border: 1px solid #aeb7c2;
             padding: 12px;
             font-size: 14px;
             outline: none;
-            background: white;
+            background: #FFFFFF;
+            color: #26394f;
+            border-radius: 2px;
         }
 
         select:focus,
         textarea:focus {
-            border-color: #5A0F1B;
+            border-color: #B9975B;
+            box-shadow: 0 0 0 2px rgba(185, 151, 91, 0.12);
         }
 
         textarea {
-            min-height: 150px;
+            min-height: 170px;
             resize: vertical;
         }
 
+        .field-help {
+            color: #7b8794;
+            font-size: 11px;
+            margin-top: 7px;
+        }
+
         .anonymous-box {
-            background: #faf5f6;
-            border-left: 4px solid #5A0F1B;
-            padding: 15px;
-            margin-bottom: 20px;
+            background: #faf8f3;
+            border: 1px solid #ded5c4;
+            border-left: 5px solid #B9975B;
+            padding: 18px;
+            margin-bottom: 22px;
         }
 
         .anonymous-box strong {
             display: block;
-            color: #5A0F1B;
+            color: #0C2340;
             font-size: 14px;
-            margin-bottom: 5px;
+            margin-bottom: 7px;
         }
 
         .anonymous-box p {
-            color: #666;
+            color: #687586;
             font-size: 13px;
-            line-height: 1.5;
+            line-height: 1.55;
         }
 
         .submit-button {
-            background: #5A0F1B;
-            color: white;
-            border: none;
-            padding: 13px 25px;
+            background: #B9975B;
+            color: #0C2340;
+            border: 1px solid #B9975B;
+            padding: 13px 26px;
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .submit-button:hover {
-            background: #430B14;
+        .submit-button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
         }
 
-        /* SUCCESS MESSAGE */
+        .error {
+            background: #fff4f4;
+            border: 1px solid #e1b6b6;
+            border-left: 5px solid #b74b4b;
+            color: #8a3030;
+            padding: 13px 16px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
 
         .success {
-            background: #edf7ed;
-            border: 1px solid #5a8f5a;
-            color: #356535;
+            background: #f2f6f4;
+            border: 1px solid #b8cabe;
+            color: #315d3b;
             padding: 12px 15px;
             margin-bottom: 25px;
             font-size: 14px;
         }
 
-        /* FOOTER */
-
         footer {
             text-align: center;
-            color: #777;
+            color: #7a8795;
             font-size: 12px;
-            padding: 10px 0 30px;
+            padding: 5px 0 30px;
         }
 
-        /* RESPONSIVE */
+        body.dark-mode {
+            background: #111820;
+            color: #f1f4f7;
+        }
 
-        @media (max-width: 800px) {
+        body.dark-mode .main {
+            background: #111820;
+        }
+
+        body.dark-mode .topbar {
+            background: #17212b;
+            border-bottom-color: #2d3945;
+        }
+
+        body.dark-mode .topbar-title {
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .topbar-subtitle {
+            color: #aeb9c5;
+        }
+
+        body.dark-mode .theme-button {
+            background: #17212b;
+            color: #FFFFFF;
+            border-color: #506070;
+        }
+
+        body.dark-mode .anonymous-notice,
+        body.dark-mode .info-card,
+        body.dark-mode .section {
+            background: #17212b;
+            border-color: #2d3945;
+            box-shadow: none;
+        }
+
+        body.dark-mode .anonymous-icon {
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .anonymous-notice h3,
+        body.dark-mode .info-card h3,
+        body.dark-mode .section-title,
+        body.dark-mode label {
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .anonymous-notice p,
+        body.dark-mode .info-card p,
+        body.dark-mode .section-description,
+        body.dark-mode .field-help {
+            color: #aeb9c5;
+        }
+
+        body.dark-mode .section-heading {
+            border-bottom-color: #2d3945;
+        }
+
+        body.dark-mode select,
+        body.dark-mode textarea {
+            background: #101820;
+            color: #f1f4f7;
+            border-color: #506070;
+        }
+
+        body.dark-mode .anonymous-box {
+            background: #211f1a;
+            border-color: #5a513f;
+        }
+
+        body.dark-mode .anonymous-box strong {
+            color: #FFFFFF;
+        }
+
+        body.dark-mode .anonymous-box p {
+            color: #b7bec6;
+        }
+
+        body.dark-mode .error {
+            background: #291a1a;
+            border-color: #633535;
+            color: #e7a7a7;
+        }
+
+        body.dark-mode footer {
+            color: #8996a3;
+        }
+
+        @media (max-width: 900px) {
 
             .sidebar {
-                width: 200px;
+                width: 210px;
             }
 
             .main {
-                margin-left: 200px;
-                width: calc(100% - 200px);
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
+                margin-left: 210px;
+                width: calc(100% - 210px);
             }
 
             .content {
-                padding: 25px;
+                padding: 30px;
             }
+
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 680px) {
+
+            .layout {
+                display: block;
+            }
 
             .sidebar {
                 position: relative;
                 width: 100%;
                 min-height: auto;
+                padding: 20px;
             }
 
-            .layout {
-                display: block;
+            .brand {
+                padding: 0 5px 18px;
+                margin-bottom: 18px;
+            }
+
+            .nav {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+            }
+
+            .nav a {
+                margin-bottom: 0;
+            }
+
+            .admin-link {
+                position: static;
+                margin-top: 18px;
+                padding-top: 15px;
             }
 
             .main {
@@ -302,17 +595,94 @@
             }
 
             .topbar {
-                padding: 0 20px;
+                padding: 15px 18px;
+                align-items: flex-start;
             }
 
-            .content {
-                padding: 20px;
+            .topbar-title {
+                font-size: 16px;
+            }
+
+            .topbar-subtitle {
+                font-size: 11px;
             }
 
             .admin-button {
                 display: none;
             }
+
+            .theme-button {
+                font-size: 0;
+                width: 42px;
+                height: 38px;
+                padding: 0;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .hero {
+                padding: 28px 22px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .hero-button {
+                text-align: center;
+                width: 100%;
+            }
+
+            .anonymous-notice {
+                align-items: flex-start;
+                padding: 17px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 21px 18px;
+            }
+
+            select,
+            textarea {
+                font-size: 16px;
+            }
+
+            .submit-button {
+                width: 100%;
+            }
+
         }
+
+        @media (max-width: 400px) {
+
+            .content {
+                padding: 14px;
+            }
+
+            .hero {
+                padding: 24px 18px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .section {
+                padding: 18px 15px;
+            }
+
+        }
+
     </style>
 </head>
 
@@ -320,13 +690,22 @@
 
 <div class="layout">
 
-    <!-- SIDEBAR -->
-
     <aside class="sidebar">
 
         <div class="brand">
-            <h1>CampusVoice</h1>
-            <p>Digital Suggestion Box</p>
+
+            <h1>
+                Campus<span>Voice</span>
+            </h1>
+
+            <p>
+                Anonymous Digital Suggestion Box
+            </p>
+
+        </div>
+
+        <div class="nav-title">
+            Navigation
         </div>
 
         <nav class="nav">
@@ -351,100 +730,266 @@
 
         <div class="admin-link">
 
-            <a href="/admin/login" class="nav">
-                <span style="display:block; color:white; text-decoration:none; padding:13px 12px; font-size:14px;">
-                    Admin Panel
-                </span>
+            <a href="/admin/login">
+                Administrator Panel
             </a>
 
         </div>
 
     </aside>
 
-    <!-- MAIN -->
-
     <main class="main">
 
         <header class="topbar">
 
             <div>
+
                 <div class="topbar-title">
                     CampusVoice
                 </div>
 
                 <div class="topbar-subtitle">
-                    Student Feedback Portal
+                    Anonymous Student Feedback Portal
                 </div>
+
             </div>
 
-            <a href="/admin/login" class="admin-button">
-                Admin Panel
-            </a>
+            <div class="topbar-actions">
+
+                <button
+                    type="button"
+                    class="theme-button"
+                    id="themeToggle"
+                    onclick="toggleTheme()">
+
+                    🌙 Dark Mode
+
+                </button>
+
+                <a
+                    href="/admin/login"
+                    class="admin-button">
+
+                    Administrator Panel
+
+                </a>
+
+            </div>
 
         </header>
 
         <div class="content">
 
-            <h1 class="page-title">
-                Student Feedback Dashboard
-            </h1>
+            <section class="hero">
 
-            <p class="page-description">
-                Share your suggestions, concerns and ideas to help improve
-                the campus experience.
-            </p>
+                <div class="hero-label">
+                    ANONYMOUS CAMPUS FEEDBACK
+                </div>
 
-            <div th:if="${param.success}" class="success">
-                Your suggestion has been submitted successfully.
-            </div>
+                <h1>
+                    Your Voice Can
+                    <span>Improve Campus.</span>
+                </h1>
 
-            <!-- INFORMATION CARDS -->
+                <p>
+                    CampusVoice provides a secure and anonymous way
+                    for students to share suggestions, concerns and
+                    ideas that can help improve the campus experience.
+                </p>
 
-            <div class="info-grid" id="information">
+                <div class="hero-buttons">
 
-                <div class="info-card">
+                    <a
+                        href="#submit"
+                        class="hero-button primary">
+
+                        Submit Anonymous Feedback
+
+                    </a>
+
+                    <a
+                        href="/track"
+                        class="hero-button secondary">
+
+                        Track My Suggestion
+
+                    </a>
+
+                </div>
+
+            </section>
+
+            <div class="anonymous-notice">
+
+                <div class="anonymous-icon">
+                    AN
+                </div>
+
+                <div>
 
                     <h3>
-                        Digital Suggestion Box
+                        100% Anonymous Submission
                     </h3>
 
                     <p>
-                        Submit suggestions and concerns related to academics,
-                        infrastructure, facilities, events and other campus
-                        services.
+                        No student name, student ID, account or
+                        personal information is required.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="info-grid"
+                id="information">
+
+                <div class="info-card">
+
+                    <div class="card-number">
+                        01
+                    </div>
+
+                    <h3>
+                        Speak Freely
+                    </h3>
+
+                    <p>
+                        Share genuine suggestions and concerns
+                        about academics, facilities, campus
+                        services and student life.
                     </p>
 
                 </div>
 
                 <div class="info-card">
 
+                    <div class="card-number">
+                        02
+                    </div>
+
                     <h3>
-                        Anonymous Feedback
+                        Stay Anonymous
                     </h3>
 
                     <p>
-                        No student name, student ID or account is required.
-                        Your feedback is submitted without identifying you.
+                        CampusVoice does not require your identity
+                        to submit feedback.
+                    </p>
+
+                </div>
+
+                <div class="info-card">
+
+                    <div class="card-number">
+                        03
+                    </div>
+
+                    <h3>
+                        Track Progress
+                    </h3>
+
+                    <p>
+                        Save your unique Tracking ID after
+                        submission and use it later to check
+                        your feedback status.
                     </p>
 
                 </div>
 
             </div>
 
-            <!-- SUBMIT SECTION -->
+            <div
+                th:if="${error}"
+                class="error"
+                th:text="${error}">
 
-            <section class="section" id="submit">
+                Please check your submission.
 
-                <h2 class="section-title">
-                    Submit Suggestion
-                </h2>
+            </div>
 
-                <form action="/submit" method="post">
+            <div
+                th:if="${param.success}"
+                class="success">
+
+                Your anonymous suggestion has been submitted
+                successfully.
+
+            </div>
+
+            <section
+                class="section"
+                id="submit">
+
+                <div class="section-heading">
+
+                    <h2 class="section-title">
+                        Submit Anonymous Feedback
+                    </h2>
+
+                    <p class="section-description">
+                        Tell us what could be improved on campus.
+                        Every submission is reviewed by the administration.
+                    </p>
+
+                </div>
+
+                <form
+                    action="/submit"
+                    method="post"
+                    id="suggestionForm">
+
+                    <div class="form-group">
+
+                        <label for="feedbackType">
+
+                            Feedback Type
+
+                            <span class="required">
+                                Required
+                            </span>
+
+                        </label>
+
+                        <select
+                            id="feedbackType"
+                            name="feedbackType"
+                            required>
+
+                            <option value="">
+                                Select feedback type
+                            </option>
+
+                            <option value="Suggestion">
+                                Suggestion
+                            </option>
+
+                            <option value="Complaint">
+                                Complaint
+                            </option>
+
+                            <option value="Appreciation">
+                                Appreciation
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
 
                     <div class="form-group">
 
                         <label for="category">
+
                             Category
+
+                            <span class="required">
+                                Required
+                            </span>
+
                         </label>
 
                         <select
@@ -487,37 +1032,55 @@
                     <div class="form-group">
 
                         <label for="suggestion">
+
                             Suggestion / Concern
+
+                            <span
+                                class="character-count"
+                                id="characterCount">
+
+                                0 / 1000
+
+                            </span>
+
                         </label>
 
                         <textarea
                             id="suggestion"
                             name="suggestion"
-                            placeholder="Enter your suggestion or concern here..."
+                            maxlength="1000"
+                            minlength="10"
+                            placeholder="Describe your suggestion, complaint, appreciation or concern..."
                             required></textarea>
+
+                        <div class="field-help">
+                            Please provide at least 10 characters and enough detail to help the administration understand the issue.
+                        </div>
 
                     </div>
 
                     <div class="anonymous-box">
 
                         <strong>
-                            Anonymous Submission
+                            🔒 Your submission is anonymous
                         </strong>
 
                         <p>
-                            Your identity is not required to submit feedback.
-                            Please do not include your name, student ID,
-                            phone number or other personal information in
-                            your suggestion.
+                            CampusVoice does not collect your name,
+                            student ID, email address or phone number.
+                            For your own privacy, do not include
+                            personal information about yourself or
+                            another person in the suggestion.
                         </p>
 
                     </div>
 
                     <button
                         type="submit"
-                        class="submit-button">
+                        class="submit-button"
+                        id="submitButton">
 
-                        Submit Feedback
+                        Submit Anonymous Feedback
 
                     </button>
 
@@ -535,6 +1098,142 @@
 
 </div>
 
-</body>
+<script>
 
+    function applyTheme() {
+
+        const theme =
+            localStorage.getItem("campusvoice-theme") || "light";
+
+        const button =
+            document.getElementById("themeToggle");
+
+        if (theme === "dark") {
+
+            document.body.classList.add("dark-mode");
+
+            if (button) {
+                button.textContent = "☀️ Light Mode";
+            }
+
+        } else {
+
+            document.body.classList.remove("dark-mode");
+
+            if (button) {
+                button.textContent = "🌙 Dark Mode";
+            }
+        }
+    }
+
+    function toggleTheme() {
+
+        const currentTheme =
+            localStorage.getItem("campusvoice-theme") || "light";
+
+        const newTheme =
+            currentTheme === "dark"
+                ? "light"
+                : "dark";
+
+        localStorage.setItem(
+            "campusvoice-theme",
+            newTheme
+        );
+
+        applyTheme();
+    }
+
+    const suggestion =
+        document.getElementById("suggestion");
+
+    const characterCount =
+        document.getElementById("characterCount");
+
+    const submitButton =
+        document.getElementById("submitButton");
+
+    const form =
+        document.getElementById("suggestionForm");
+
+    function updateCharacterCount() {
+
+        const length =
+            suggestion.value.length;
+
+        characterCount.textContent =
+            length + " / 1000";
+
+        if (length > 1000) {
+
+            characterCount.style.color =
+                "#b74b4b";
+
+        } else if (length > 900) {
+
+            characterCount.style.color =
+                "#B9975B";
+
+        } else {
+
+            characterCount.style.color =
+                "";
+        }
+    }
+
+    suggestion.addEventListener(
+        "input",
+        updateCharacterCount
+    );
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+
+            const text =
+                suggestion.value.trim();
+
+            if (text.length < 10) {
+
+                event.preventDefault();
+
+                alert(
+                    "Please provide at least 10 characters in your suggestion."
+                );
+
+                suggestion.focus();
+
+                return;
+            }
+
+            if (text.length > 1000) {
+
+                event.preventDefault();
+
+                alert(
+                    "Your suggestion cannot exceed 1000 characters."
+                );
+
+                suggestion.focus();
+
+                return;
+            }
+
+            suggestion.value = text;
+
+            submitButton.disabled = true;
+
+            submitButton.textContent =
+                "Submitting...";
+
+        }
+    );
+
+    updateCharacterCount();
+
+    applyTheme();
+
+</script>
+
+</body>
 </html>
