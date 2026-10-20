@@ -9,8 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Set;
+
 @Controller
 public class HomeController {
+
+    private static final Set<String> VALID_CATEGORIES = Set.of(
+            "Academics", "Infrastructure", "Canteen", "Transport", "Events", "Other");
 
     private final SuggestionRepository suggestionRepository;
 
@@ -45,7 +50,7 @@ public class HomeController {
                         ? ""
                         : suggestion.trim();
 
-        if (cleanCategory.isEmpty()
+        if (!VALID_CATEGORIES.contains(cleanCategory)
                 || cleanFeedbackType.isEmpty()
                 || cleanSuggestion.isEmpty()) {
 

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Admins - CampusVoice</title>
+    <script>
+        (function () {
+            if (localStorage.getItem("campusvoice-theme") === "dark") {
+                document.documentElement.classList.add("dark-mode");
+            }
+        })();
+    </script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+        body { background: #f5f7fa; color: #0c2340; }
+        .header { min-height: 76px; background: #0c2340; color: white; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 5%; border-bottom: 4px solid #b9975b; flex-wrap: wrap; }
+        .brand h1 { font-size: 24px; margin-bottom: 5px; }
+        .brand h1 span { color: #b9975b; }
+        .brand p { font-size: 12px; color: #d7dee7; }
+        .header-button { color: white; text-decoration: none; border: 1px solid #b9975b; padding: 10px 14px; font-size: 13px; }
+        .header-button:hover { background: #b9975b; color: #0c2340; }
+        .container { max-width: 1200px; padding: 34px 22px 60px; margin: auto; }
+        h2 { font-size: 28px; margin-bottom: 8px; }
+        .intro { color: #687586; font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+        .card { background: white; border: 1px solid #d5dbe2; padding: 24px; margin-bottom: 22px; box-shadow: 0 3px 12px rgba(12,35,64,.04); }
+        .card h3 { font-size: 19px; margin-bottom: 18px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+        label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 7px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #bfc8d2; background: white; color: #0c2340; border-radius: 3px; font-size: 14px; }
+        input:focus, select:focus { outline: 2px solid rgba(185,151,91,.35); border-color: #b9975b; }
+        .field { min-width: 0; }
+        .button { border: 0; background: #0c2340; color: white; padding: 12px 17px; font-weight: bold; cursor: pointer; }
+        .button:hover { background: #193b61; }
+        .button.gold { background: #b9975b; color: #0c2340; }
+        .button.danger { background: #8b2635; color: white; padding: 10px 12px; }
+        .form-actions { margin-top: 18px; }
+        .message { padding: 13px 15px; margin-bottom: 18px; border: 1px solid; font-size: 14px; }
+        .error { background: #fff3f3; border-color: #d9a8ae; color: #7d202b; }
+        .success { background: #f0faf3; border-color: #a6d7b2; color: #1d6331; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 760px; }
+        th, td { text-align: left; padding: 13px 12px; border-bottom: 1px solid #e1e5e9; vertical-align: middle; font-size: 13px; }
+        th { background: #0c2340; color: white; font-size: 12px; letter-spacing: .3px; }
+        .role { display: inline-block; padding: 5px 8px; background: #f1e8d8; color: #60491f; font-weight: bold; font-size: 11px; }
+        .subform { display: flex; align-items: center; gap: 8px; }
+        .subform select, .subform input { min-width: 150px; }
+        .muted { color: #687586; }
+        .warning { font-size: 12px; color: #687586; margin-top: 10px; line-height: 1.5; }
+        html.dark-mode body { background: #101923; color: #f4f6f8; }
+        html.dark-mode .card { background: #172331; border-color: #304052; }
+        html.dark-mode .intro, html.dark-mode .muted, html.dark-mode .warning { color: #b4bfca; }
+        html.dark-mode input, html.dark-mode select { background: #101923; color: white; border-color: #4a5969; }
+        html.dark-mode td { border-color: #304052; }
+        html.dark-mode .success { background: #163322; color: #b5edc2; }
+        html.dark-mode .error { background: #351b21; color: #ffc7ce; }
+        @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } .card { padding: 17px; } h2 { font-size: 24px; } }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="brand">
+        <h1>Campus<span>Voice</span></h1>
+        <p>HOD control panel — Rais Mulla</p>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="/admin" class="header-button">Dashboard</a>
+        <a href="/admin/logout" class="header-button">Logout</a>
+    </div>
+</header>
+<main class="container">
+    <h2>Admin Management</h2>
+    <p class="intro">Create and manage the category admins. Each category can have one active category admin. The HOD account has access to all categories and cannot be deleted here.</p>
+
+    <div class="message error" th:if="${error}" th:text="${error}"></div>
+    <div class="message success" th:if="${success}" th:text="${success}"></div>
+
+    <section class="card">
+        <h3>Create Category Admin</h3>
+        <form action="/admin/users/create" method="post">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="displayName">Admin's full name</label>
+                    <input id="displayName" name="displayName" type="text" maxlength="120" required placeholder="e.g. Rahul Sharma">
+                </div>
+                <div class="field">
+                    <label for="username">Login username</label>
+                    <input id="username" name="username" type="text" minlength="3" maxlength="80" pattern="[A-Za-z0-9._-]+" required placeholder="e.g. rahul.academics">
+                </div>
+                <div class="field">
+                    <label for="password">Temporary password</label>
+                    <input id="password" name="password" type="password" minlength="10" required autocomplete="new-password" placeholder="At least 10 characters">
+                </div>
+                <div class="field">
+                    <label for="category">Assigned category</label>
+                    <select id="category" name="category" required>
+                        <option value="" disabled selected>Select a category</option>
+                        <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-actions"><button class="button gold" type="submit">Create Admin Account</button></div>
+            <p class="warning">Passwords are stored as salted password hashes. Tell each admin their login details securely; do not put passwords in GitHub.</p>
+        </form>
+    </section>
+
+    <section class="card">
+        <h3>Existing Accounts</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Category / Assignment</th><th>Actions</th></tr></thead>
+                <tbody>
+                <tr th:each="account : ${accounts}">
+                    <td th:text="${account.displayName}">Rais Mulla</td>
+                    <td th:text="${account.username}">hod</td>
+                    <td><span class="role" th:text="${account.role == 'HOD' ? 'HOD / SUPER ADMIN' : 'CATEGORY ADMIN'}">HOD</span></td>
+                    <td th:if="${account.role == 'HOD'}"><span class="muted">All categories</span></td>
+                    <td th:if="${account.role != 'HOD'}">
+                        <form class="subform" action="/admin/users/update" method="post">
+                            <input type="hidden" name="id" th:value="${account.id}">
+                            <input type="text" name="displayName" th:value="${account.displayName}" maxlength="120" required aria-label="Admin display name">
+                            <select name="category" required aria-label="Assigned category">
+                                <option th:each="category : ${categories}" th:value="${category}" th:text="${category}" th:selected="${category == account.category}"></option>
+                            </select>
+                            <button class="button" type="submit">Save</button>
+                        </form>
+                    </td>
+                    <td th:if="${account.role == 'HOD'}"><span class="muted">Protected account</span></td>
+                    <td th:if="${account.role != 'HOD'}">
+                        <form action="/admin/users/delete" method="post" onsubmit="return confirm('Delete this admin account? Suggestions will remain saved, but this admin will no longer be able to log in.');">
+                            <input type="hidden" name="id" th:value="${account.id}">
+                            <button class="button danger" type="submit">Delete Admin</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(accounts)}"><td colspan="5" class="muted">No admin accounts have been created yet.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

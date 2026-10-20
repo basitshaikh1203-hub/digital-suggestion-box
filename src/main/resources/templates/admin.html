@@ -683,6 +683,15 @@ html.dark-mode .line-point {
             Return to Home
         </a>
 
+        <span style="align-self:center; color:#d7dee7; font-size:12px; padding:0 8px;"
+              th:text="${admin.displayName + ' — ' + (isHod ? 'HOD' : admin.category + ' Admin')}">
+            Rais Mulla — HOD
+        </span>
+
+        <a th:if="${isHod}" href="/admin/users" class="header-button">
+            Manage Admins
+        </a>
+
         <a href="/admin/logout" class="header-button">
             Logout
         </a>
@@ -697,7 +706,8 @@ html.dark-mode .line-point {
         Administration Dashboard
     </h1>
 
-    <p class="page-description">
+    <p class="page-description"
+       th:text="${isHod ? 'Department-wide overview of anonymous student feedback.' : 'Review and manage anonymous feedback assigned to ' + admin.category + '.'}">
         Manage and review anonymous student feedback.
     </p>
 
@@ -725,7 +735,7 @@ html.dark-mode .line-point {
 
     </div>
 
-    <section class="analytics-section">
+    <section class="analytics-section" th:if="${isHod}">
 
         <h2 class="analytics-title">
             Analytics Overview
